@@ -2,13 +2,15 @@
 import type ICategoria from '@/interface/ICategoria';
 import type { PropType } from 'vue';
 import TagVue from './TagVue.vue';
+import IngredienteSelecionavel from './IngredienteSelecionavel.vue';
 
 export default {
     // Propriedade
     props: {
         categoria: { type: Object as PropType<ICategoria>, required: true }
     },
-    components: {TagVue}
+    components: { TagVue, IngredienteSelecionavel },
+    emits: ['adicionarIngrediente', 'removerIngrediente']
 }
 </script>
 
@@ -18,19 +20,20 @@ export default {
             <!-- Percorrendo uma lista de imagens -->
             <img :src="`icones/categorias_ingredientes/${categoria.imagem}`" alt="">
             <h2 class="paragrafo-lg categoria__nome">{{ categoria.nome }}</h2>
-            
+
             <ul class="categoria__ingredientes">
                 <li v-for="ingrediente in categoria.ingredientes" :key="ingrediente">
-                    <TagVue :texto="ingrediente"/>
+                    <IngredienteSelecionavel :ingrediente="ingrediente"
+                        @adicionar-ingrediente="$emit('adicionarIngrediente', $event)"
+                        @remover-ingrediente="$emit('removerIngrediente', $event)" />
                 </li>
             </ul>
         </header>
     </article>
-    {{ categoria.nome }}
+
 </template>
 
 <style scoped>
-
 .categoria {
     width: 19.5rem;
     padding: 1rem;
